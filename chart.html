@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SDJ - Smart Option Style Crypto Dashboard</title>
+  <style>
+    /* Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    /* CSS Variables for Dark Smart Option style */
+    :root {
+      --primary-color: #ff6f20; /* Warm orange accent */
+      --background-dark: #121212;
+      --background-card: rgba(30, 30, 40, 0.85);
+      --background-glass: rgba(255 255 255 / 0.05);
+      --text-primary: #eaeaea;
+      --text-secondary: #999999;
+      --shadow-light: rgba(255, 111, 32, 0.25);
+      --shadow-dark: rgba(0, 0, 0, 0.8);
+      --border-radius: 14px;
+      --spacing: 24px;
+      --font-family: 'Inter', sans-serif;
+    }
+
+    /* Reset and base */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      background: linear-gradient(135deg, #161616 0%, #1f1f2f 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      background: var(--background-card);
+      backdrop-filter: saturate(180%) blur(20px);
+      padding: 16px var(--spacing);
+      box-shadow: 0 0 15px var(--shadow-dark);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, var(--primary-color), #ff8c3b);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      user-select: none;
+      letter-spacing: 1.2px;
+    }
+
+    /* Main Layout */
+    main {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr 1.25fr;
+      gap: var(--spacing);
+      max-width: 1280px;
+      margin: 40px auto var(--spacing);
+      padding: 0 var(--spacing);
+      flex: 1;
+    }
+
+    @media (max-width: 1024px) {
+      main {
+        grid-template-columns: 1fr 2fr;
+        max-width: 900px;
+        margin: 32px auto var(--spacing);
+      }
+    }
+
+    @media (max-width: 640px) {
+      main {
+        grid-template-columns: 1fr;
+        margin: 24px 12px var(--spacing);
+        gap: 32px;
+      }
+    }
+
+    /* Shared card style */
+    section.card {
+      background: var(--background-card);
+      border-radius: var(--border-radius);
+      padding: var(--spacing);
+      box-shadow: 0 12px 30px var(--shadow-light);
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: saturate(180%) blur(15px);
+      transition: transform 0.3s ease;
+      user-select: none;
+    }
+
+    section.card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 44px var(--shadow-light);
+    }
+
+    /* Section Titles */
+    section.card > h2 {
+      margin: 0 0 24px 0;
+      font-weight: 600;
+      font-size: 1.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* Live Prices Section */
+    #livePrices ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: flex-start;
+    }
+
+    #livePrices li {
+      flex: 1 1 120px;
+      background: var(--background-glass);
+      border-radius: 12px;
+      padding: 14px 18px;
+      box-shadow: 0 4px 10px rgba(255 111 32 / 0.2);
+      cursor: default;
+      transition: background-color 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      user-select: text;
+    }
+
+    #livePrices li:focus,
+    #livePrices li:hover {
+      background-color: rgba(255 111 32 / 0.1);
+      outline: none;
+    }
+
+    #livePrices .coin-name {
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      color: #ff9b5a;
+      text-transform: capitalize;
+      letter-spacing: 0.6px;
+    }
+
+    #livePrices .price {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--primary-color);
+      user-select: all;
+    }
+
+    #livePrices .price.negative {
+      color: #ff4c4c;
+    }
+
+    /* Portfolio Section */
+    #portfolio form {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: var(--spacing);
+    }
+
+    #portfolio select,
+    #portfolio input[type="number"] {
+      flex: 1 1 130px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: none;
+      font-size: 1rem;
+      background: var(--background-glass);
+      color: var(--text-primary);
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6);
+      transition: box-shadow 0.3s ease;
+      user-select: text;
+    }
+
+    #portfolio select:focus,
+    #portfolio input[type="number"]:focus {
+      outline: none;
+      box-shadow: 0 0 16px var(--primary-color);
+      background: rgba(255 111 32 / 0.1);
+    }
+
+    #portfolio button {
+      background: var(--primary-color);
+      padding: 14px 28px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(255 111 32 / 0.5);
+      user-select: none;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #portfolio button:hover,
+    #portfolio button:focus {
+      background: #ff7a3c;
+      box-shadow: 0 8px 22px rgba(255 111 32 / 0.7);
+      outline: none;
+    }
+
+    #portfolioList {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 360px;
+    }
+
+    #portfolioList::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #portfolioList::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 111, 32, 0.3);
+      border-radius: 12px;
+    }
+
+    #portfolioList table {
+      width: 100%;
+      border-collapse: collapse;
+      color: var(--text-primary);
+      user-select: none;
+    }
+
+    #portfolioList th,
+    #portfolioList td {
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(255 111 32 / 0.15);
+      text-align: left;
+      font-weight: 500;
+    }
+
+    #portfolioList th {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    #portfolioList td button {
+      background: transparent;
+      border: none;
+      color: #ff4c4c;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      padding: 0;
+      user-select: none;
+    }
+
+    #portfolioList td button:hover,
+    #portfolioList td button:focus {
+      color: #ff7373;
+      outline: none;
+    }
+
+    /* Chart Section */
+    #chartSection {
+      grid-column: span 2;
+      display: flex;
+      flex-direction: column;
+      max-height: 560px;
+    }
+
+    #chartControls {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    #chartControls select {
+      flex: 1 1 160px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: none;
+      background: var(--background-glass);
+      color: var(--text-primary);
+      font-size: 1rem;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.6);
+      transition: box-shadow 0.3s ease;
+      user-select: text;
+    }
+
+    #chartControls select:focus {
+      outline: none;
+      box-shadow: 0 0 16px var(--primary-color);
+      background: rgba(255 111 32 / 0.1);
+    }
+
+    #chartControls button {
+      background: var(--primary-color);
+      color: white;
+      border-radius: 12px;
+      padding: 14px 32px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(255 111 32 / 0.5);
+      user-select: none;
+      border: none;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      flex: 1 1 160px;
+    }
+
+    #chartControls button:hover,
+    #chartControls button:focus {
+      background: #ff803d;
+      box-shadow: 0 10px 28px rgba(255 111 32 / 0.7);
+      outline: none;
+    }
+
+    canvas {
+      flex: 1;
+      border-radius: var(--border-radius);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      background-color: #1e1e2f;
+      user-select: none;
+    }
+
+    /* Accessibility */
+    .sr-only {
+      border: 0 !important;
+      clip: rect(1px,1px,1px,1px) !important;
+      -webkit-clip-path: inset(50%) !important;
+              clip-path: inset(50%) !important;
+      height: 1px !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      padding: 0 !important;
+      position: absolute !important;
+      width: 1px !important;
+      white-space: nowrap !important;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SDJ</h1>
+  </header>
+  <main>
+    <!-- Live Prices -->
+    <section id="livePrices" class="card" aria-label="Live cryptocurrency prices">
+      <h2>Live Prices</h2>
+      <ul id="pricesList" aria-live="polite" aria-atomic="true" role="list"> 
+        <!-- Live prices will appear here -->
+      </ul>
+    </section>
+
+    <!-- Portfolio -->
+    <section id="portfolio" class="card" aria-label="Crypto portfolio tracker">
+      <h2>Portfolio Tracker</h2>
+      <form id="addCoinForm" aria-label="Add coin to portfolio">
+        <label for="coinSelect" class="sr-only">Select cryptocurrency</label>
+        <select id="coinSelect" required aria-required="true" name="coin"></select>
+        <label for="amountInput" class="sr-only">Amount owned</label>
+        <input type="number" id="amountInput" min="0" step="any" placeholder="Amount" required aria-required="true" />
+        <button type="submit">Add</button>
+      </form>
+      <div id="portfolioList" tabindex="0" aria-live="polite" aria-atomic="true">
+        <table aria-label="Cryptocurrency holdings">
+          <thead>
+            <tr>
+              <th>Coin</th>
+              <th>Amount</th>
+              <th>Current Value (USD)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="portfolioTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Chart -->
+    <section id="chartSection" class="card" aria-label="Cryptocurrency price chart">
+      <h2>Price Chart</h2>
+      <div id="chartControls">
+        <label for="chartCoinSelect" class="sr-only">Select coin for chart</label>
+        <select id="chartCoinSelect" aria-required="true" name="chartCoin"></select>
+        <label for="chartDaysSelect" class="sr-only">Select days range for chart</label>
+        <select id="chartDaysSelect" aria-required="true" name="chartDays">
+          <option value="1">1 Day</option>
+          <option value="7" selected>7 Days</option>
+          <option value="30">30 Days</option>
+          <option value="90">90 Days</option>
+          <option value="180">180 Days</option>
+          <option value="365">1 Year</option>
+        </select>
+        <button id="loadChartBtn" type="button">Load Chart</button>
+      </div>
+      <canvas id="priceChart" role="img" aria-label="Cryptocurrency price chart canvas"></canvas>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const API_BASE = 'https://api.coingecko.com/api/v3';
+    const topFiveCoinIds = ['bitcoin','ethereum','tether','binancecoin','ripple'];
+
+    let coinList = [];
+    let portfolio = {};
+    let currentPrices = {};
+
+    function formatUSD(value) {
+      return value.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 });
+    }
+
+    async function fetchCoinsList() {
+      const res = await fetch(`${API_BASE}/coins/list`);
+      const data = await res.json();
+      return data;
+    }
+
+    function populateCoinSelects(coins) {
+      const coinSelect = document.getElementById('coinSelect');
+      const chartCoinSelect = document.getElementById('chartCoinSelect');
+
+      const topFiveCoins = coins.filter(c => topFiveCoinIds.includes(c.id))
+        .sort((a,b)=> topFiveCoinIds.indexOf(a.id)-topFiveCoinIds.indexOf(b.id));
+      const otherCoins = coins.filter(c => !topFiveCoinIds.includes(c.id)).slice(0, 200);
+
+      coinSelect.innerHTML = '';
+      chartCoinSelect.innerHTML = '';
+
+      const topOptGroup = document.createElement('optgroup');
+      topOptGroup.label = 'Top 5 Coins';
+      topFiveCoins.forEach(c => {
+        const opt1 = document.createElement('option');
+        opt1.value = c.id;
+        opt1.textContent = `${c.name} (${c.symbol.toUpperCase()})`;
+        topOptGroup.appendChild(opt1);
+
+        const opt2 = document.createElement('option');
+        opt2.value = c.id;
+        opt2.textContent = `${c.name} (${c.symbol.toUpperCase()})`;
+        chartCoinSelect.appendChild(opt2);
+      });
+      coinSelect.appendChild(topOptGroup);
+
+      const otherOptGroup = document.createElement('optgroup');
+      otherOptGroup.label = 'Other Coins';
+      otherCoins.forEach(c => {
+        const opt1 = document.createElement('option');
+        opt1.value = c.id;
+        opt1.textContent = `${c.name} (${c.symbol.toUpperCase()})`;
+        otherOptGroup.appendChild(opt1);
+
+        const opt2 = document.createElement('option');
+        opt2.value = c.id;
+        opt2.textContent = `${c.name} (${c.symbol.toUpperCase()})`;
+        chartCoinSelect.appendChild(opt2);
+      });
+      coinSelect.appendChild(otherOptGroup);
+    }
+
+    async function fetchPrices(coinIds) {
+      try{
+        const idsParam = coinIds.join(',');
+        const res = await fetch(`${API_BASE}/simple/price?ids=${idsParam}&vs_currencies=usd&include_24hr_change=true`);
+        const data = await res.json();
+        return data;
+      } catch(e) {
+        console.error('Error fetching prices:', e);
+        return {};
+      }
+    }
+
+    function updateLivePrices(pricesData) {
+      const pricesList = document.getElementById('pricesList');
+      pricesList.innerHTML = '';
+      topFiveCoinIds.forEach(id=>{
+        const priceObj = pricesData[id];
+        if(!priceObj) return;
+        const li = document.createElement('li');
+        li.setAttribute('tabindex','0');
+        li.setAttribute('aria-label',`${id} current price is ${formatUSD(priceObj.usd)}`);
+        li.innerHTML = `
+          <div class="coin-name">${id.charAt(0).toUpperCase()+id.slice(1)}</div>
+          <div class="price ${priceObj.usd_24h_change<0?'negative':''}">${formatUSD(priceObj.usd)}</div>
+        `;
+        pricesList.appendChild(li);
+      });
+    }
+
+    function loadPortfolio() {
+      const stored = localStorage.getItem('cryptoPortfolio');
+      portfolio = stored ? JSON.parse(stored) : {};
+    }
+
+    function savePortfolio() {
+      localStorage.setItem('cryptoPortfolio', JSON.stringify(portfolio));
+    }
+
+    function renderPortfolio() {
+      const tbody = document.getElementById('portfolioTableBody');
+      tbody.innerHTML = '';
+      for(const [coinId, amount] of Object.entries(portfolio)) {
+        const coinName = coinList.find(c=>c.id===coinId);
+        const price = currentPrices[coinId]?.usd || 0;
+        const value = price * amount;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${coinName?coinName.name:coinId}</td>
+          <td>${amount}</td>
+          <td>${formatUSD(value)}</td>
+          <td><button aria-label="Remove ${coinName?coinName.name:coinId} from portfolio" data-coin="${coinId}">&times;</button></td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
+
+    function addPortfolioCoin(coinId, amount) {
+      if(portfolio[coinId]) portfolio[coinId] += amount;
+      else portfolio[coinId] = amount;
+      savePortfolio();
+      renderPortfolio();
+      updatePortfolioValue();
+    }
+
+    function removePortfolioCoin(coinId) {
+      if(portfolio[coinId]) delete portfolio[coinId];
+      savePortfolio();
+      renderPortfolio();
+      updatePortfolioValue();
+    }
+
+    function updatePortfolioValue(){
+      // Future: could display total value
+    }
+
+    let chartInstance=null;
+    async function loadChart(coinId, days){
+      if(!coinId) return;
+      try{
+        const res = await fetch(`${API_BASE}/coins/${coinId}/market_chart?vs_currency=usd&days=${days}&interval=daily`);
+        const data = await res.json();
+        const prices = data.prices || [];
+        const labels = prices.map(p=> new Date(p[0]).toLocaleDateString());
+        const priceData = prices.map(p=>p[1]);
+        renderChart(labels, priceData, coinId);
+      } catch(e) {
+        console.error('Error loading chart:', e);
+      }
+    }
+
+    function renderChart(labels, data, coinId) {
+      const ctx = document.getElementById('priceChart').getContext('2d');
+      if(chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(ctx, {
+        type:'line',
+        data:{
+          labels,
+          datasets:[{
+            label:`${coinId.charAt(0).toUpperCase()+coinId.slice(1)} Price (USD)`,
+            data,
+            borderColor: 'var(--primary-color)',
+            backgroundColor: 'rgba(255,111,32,0.2)',
+            fill: true,
+            tension: 0.25,
+            pointRadius: 0,
+            borderWidth: 2
+          }]
+        },
+        options:{
+          responsive:true,
+          maintainAspectRatio:false,
+          interaction:{mode:'index', intersect:false},
+          scales:{
+            x:{
+              display:true,
+              title:{display:true,text:'Date',color:'#888'},
+              ticks:{color:'#aaa', maxRotation:45, minRotation:30},
+              grid:{color:'rgba(255,255,255,0.05)'}
+            },
+            y:{
+              display:true,
+              title:{display:true,text:'Price (USD)',color:'#888'},
+              ticks:{
+                color:'#aaa',
+                callback:value => '$' + value.toLocaleString()
+              },
+              grid:{color:'rgba(255,255,255,0.05)'}
+            }
+          },
+          plugins:{
+            legend:{labels:{color:'#eee'}},
+            tooltip:{
+              mode:'index',
+              intersect:false,
+              backgroundColor:'#222',
+              titleColor:'#eee',
+              bodyColor:'#ddd'
+            }
+          }
+        }
+      });
+    }
+
+    async function refreshPrices() {
+      const idsSet = new Set(topFiveCoinIds);
+      Object.keys(portfolio).forEach(id => idsSet.add(id));
+      const coinIds = Array.from(idsSet);
+      currentPrices = await fetchPrices(coinIds);
+      updateLivePrices(currentPrices);
+      renderPortfolio();
+      updatePortfolioValue();
+    }
+
+    async function init(){
+      coinList = await fetchCoinsList();
+      populateCoinSelects(coinList);
+      loadPortfolio();
+      await refreshPrices();
+      setInterval(refreshPrices, 60000);
+    }
+
+    document.getElementById('addCoinForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      const coinId = document.getElementById('coinSelect').value;
+      const amount = parseFloat(document.getElementById('amountInput').value);
+      if(!coinId || isNaN(amount) || amount<=0) return;
+      addPortfolioCoin(coinId, amount);
+      e.target.reset();
+    });
+
+    document.getElementById('portfolioTableBody').addEventListener('click', e=>{
+      if(e.target.tagName==='BUTTON'){
+        const coinId = e.target.getAttribute('data-coin');
+        if(coinId) removePortfolioCoin(coinId);
+      }
+    });
+
+    document.getElementById('loadChartBtn').addEventListener('click', ()=>{
+      const coinId = document.getElementById('chartCoinSelect').value;
+      const days = document.getElementById('chartDaysSelect').value;
+      loadChart(coinId, days);
+    });
+
+    window.addEventListener('load', ()=>{
+      init().then(() => {
+        const defaultCoin = topFiveCoinIds[0] || 'bitcoin';
+        const chartCoinSelect = document.getElementById('chartCoinSelect');
+        chartCoinSelect.value = defaultCoin;
+        loadChart(defaultCoin, 7);
+      });
+    });
+  </script>
+</body>
+</html>
+
