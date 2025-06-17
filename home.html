@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDJ Payment Service</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Body and Font Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensures footer stays at bottom */
+        }
+        /* Primary Button Styles (Orange) */
+        .primary-button {
+            background-color: #ff8c00; /* Orange */
+            color: white;
+            font-weight: 500;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+        }
+        .primary-button:hover {
+            background-color: #e07a00; /* Darker Orange */
+            transform: scale(1.05);
+        }
+        /* Secondary Button Styles (Light Gray) */
+        .secondary-button {
+            background-color: #f3f4f6; /* Light Gray */
+            color: #4b5563; /* Gray-700 */
+            font-weight: 500;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .secondary-button:hover {
+            background-color: #e5e7eb; /* Slightly Darker Light Gray */
+        }
+        /* Input Field Styles */
+        .input-field {
+            border: 1px solid #d1d5db; /* Gray-300 */
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            width: 100%;
+            font-size: 1rem;
+            line-height: 1.5;
+            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #ff8c00; /* Orange */
+            box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.2); /* Orange focus ring */
+        }
+        /* CSS for the slideshow (used on public home content) */
+        .feature-slide {
+          position: relative;
+          overflow: hidden;
+        }
+        .image-container {
+          width: 100%;
+          height: 200px; /* Adjust as needed */
+        }
+        .slide-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          position: absolute;
+          top: 0;
+          left: 0;
+          opacity: 0;
+          transition: opacity 1s ease-in-out;
+        }
+        .slide-image.active {
+          opacity: 1;
+        }
+
+        /* Styles for content sections (used for client-side routing) */
+        .content-section {
+            display: none; /* Hide all content sections by default */
+            flex-grow: 1; /* Allow content to grow and push footer down */
+            padding-bottom: 2rem; /* Add some padding before footer */
+        }
+        .content-section.active {
+            display: block; /* Show active content section */
+        }
+
+        /* Adjust min-height for main content within SPA context for forms */
+        .min-h-screen-minus-header-footer {
+            min-height: calc(100vh - 120px); /* Estimated adjustment for header/footer */
+            display: flex; /* Ensure content is centered vertically */
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Styles specific to the dashboard page */
+        .recent-activity-item:hover {
+            background-color: #f7f7f7;
+            transition: background-color 0.2s ease-in-out;
+        }
+        header .text-black:hover {
+            color: #ff8c00; /* Dark Orange on Hover */
+        }
+        .logo-placeholder {
+            width: 50px; /* Adjust as needed */
+            height: 50px; /* Adjust as needed */
+            background: linear-gradient(to right, black, #ff8c00); /* Black to Orange Gradient */
+            border-radius: 5px; /* Optional: Rounded corners */
+        }
+        /* Emphasis on Balance */
+        .balance-amount {
+            font-size: 2.5rem; /* Slightly larger */
+        }
+        /* Subtle Link Hover */
+        nav a:hover, .underline-link:hover {
+            opacity: 0.8;
+        }
+
+        /* NEW: Custom styles for service icons */
+    .service-icon {
+        font-size: 3rem; /* Adjust size as needed */
+        color: #ff8c00; /* Orange */
+        margin-bottom: 1rem;
+        }
+        /* --- CONTACT US PAGE SPECIFIC STYLES --- */
+        /* Main Container for Contact Us Page */
+        .contact-us-container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .contact-us-container h1, .contact-us-container h2 {
+            color: #007bff; /* Changed from Tailwind's orange to a blue, but can be customized */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .contact-us-container .intro-text {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        /* Contact Form Styling */
+        .contact-form-section {
+            margin-bottom: 40px;
+        }
+
+        .contact-form .form-group {
+            margin-bottom: 15px;
+        }
+
+        .contact-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .contact-form input[type="text"],
+        .contact-form input[type="email"],
+        .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db; /* Gray-300 */
+            border-radius: 4px;
+            box-sizing: border-box; /* Ensures padding doesn't add to the total width */
+        }
+
+        .contact-form textarea {
+            resize: vertical; /* Allow vertical resizing */
+        }
+
+        .contact-form .required {
+            color: red;
+            font-weight: normal;
+        }
+
+        .contact-form .submit-button {
+            /* Inherits primary-button styles from global, but can be overridden here if needed */
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 1em;
+        }
+
+        .contact-form .response-note {
+            text-align: center;
+            margin-top: 15px;
+            font-style: italic;
+            color: #555;
+        }
+
+        /* Other Contact Methods Styling */
+        .other-contact-methods {
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+            padding-top: 30px;
+        }
+
+        .contact-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .contact-item {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .contact-item i {
+            font-size: 2.5em;
+            color: #ff8c00; /* Orange from primary-button */
+            margin-bottom: 10px;
+        }
+
+        .contact-item h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .contact-item p {
+            margin: 5px 0;
+        }
+
+        .contact-item a {
+            color: #ff8c00; /* Orange from primary-button */
+            text-decoration: none;
+        }
+
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+
+        .contact-item .hours {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Social Media Links */
+        .social-links {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .social-links a {
+            font-size: 2em;
+            color: #333;
+            margin: 0 15px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #ff8c00; /* Orange from primary-button */
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        .faq-section a {
+            color: #ff8c00; /* Orange from primary-button */
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .faq-section a:hover {
+            text-decoration: underline;
+        }
+
+        /* Map Section */
+        .map-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        .map-embed {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .map-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .map-note {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        /* Responsive Design for Contact Page */
+        @media (max-width: 768px) {
+            .contact-us-container {
+                margin: 20px;
+                padding: 15px;
+            }
+
+            .contact-info-grid {
+                grid-template-columns: 1fr; /* Stack items on small screens */
+            }
+
+            .contact-item {
+                margin-bottom: 15px;
+            }
+
+            .social-links a {
+                font-size: 1.8em;
+                margin: 0 10px;
+            }
+        }
+        /* CSS styles end here */
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Header Section -->
+    <header class="bg-white shadow-md p-4 md:p-6">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center mb-4 md:mb-0">
+                <img src="./images/logo1.jpg" alt="SDJ Logo" class="h-12 w-12 mr-2">
+                <div class="text-2xl font-bold text-black hover:text-orange-500 transition duration-300">
+                    SDJ
+                </div>
+            </div>
+            <!-- Navigation links for logged-out state -->
+            <nav id="logged-out-nav" class="space-x-4 md:space-x-6 text-gray-700">
+                <a href="#home" class="hover:text-orange-500 transition duration-300 nav-link" data-target="public-home-content">Home</a>
+                <a href="#login" class="hover:text-orange-500 transition duration-300 nav-link" data-target="login-content">Login</a>
+                <a href="#signup" class="hover:text-orange-500 transition duration-300 nav-link" data-target="signup-content">Sign Up</a>
+                <a href="#about" class="hover:text-orange-500 transition duration-300 nav-link" data-target="about-content">About</a>
+                <a href="#services" class="hover:text-orange-500 transition duration-300 nav-link" data-target="services-content">Services</a>
+                <a href="#contact" class="hover:text-orange-500 transition duration-300 nav-link" data-target="contact-content">Contact Us</a>
+            </nav>
+
+            <!-- Navigation links for logged-in state (hidden by default) -->
+            <nav id="logged-in-nav" class="hidden flex flex-wrap justify-center md:justify-end space-x-4 md:space-x-6 text-gray-700">
+                <!-- 'Home' for logged-in users points to the dashboard -->
+                <a href="#dashboard" class="hover:text-orange-500 transition duration-300 nav-link" data-target="dashboard-content">Home</a>
+                <a href="#send-request" class="hover:text-orange-500 transition duration-300 nav-link" data-target="dashboard-content">Send & Request</a>
+                <a href="#wallet" class="hover:text-orange-500 transition duration-300 nav-link" data-target="dashboard-content">Wallet</a>
+                <a href="#activity" class="hover:text-orange-500 transition duration-300 nav-link" data-target="dashboard-content">Activity</a>
+                <a href="#help" class="hover:text-orange-500 transition duration-300 nav-link" data-target="dashboard-content">Help</a>
+                <a href="#services" class="hover:text-orange-500 transition duration-300 nav-link" data-target="services-content">Services</a>
+                <a href="#" id="logout-link" class="hover:text-orange-500 transition duration-300">Log Out</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area - Contains all "pages" -->
+    <main class="container mx-auto p-4 md:p-8 flex-grow">
+        <!-- Public Home Page Content (Original 'Home') -->
+        <div id="public-home-content" class="content-section">
+            <section class="text-center py-12">
+                <h1 class="text-4xl font-bold text-gray-800 mb-6">Welcome to SDJ Payment Service</h1>
+                <p class="text-lg text-gray-600 mb-8">Your trusted partner for secure and convenient payments.</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="#login" class="primary-button py-2 px-6 rounded-md transition duration-300 nav-link" data-target="login-content">Login</a>
+                    <a href="#signup" class="secondary-button py-2 px-6 rounded-md transition duration-300 nav-link" data-target="signup-content">Sign Up</a>
+                </div>
+            </section>
+
+            <section class="py-12 bg-gray-50 rounded-lg shadow-md">
+                <div class="container mx-auto text-center">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Your way to pay, with SDJ</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="p-6 bg-white rounded-lg shadow-md feature-slide">
+                            <h3 class="text-xl font-semibold text-gray-700 mb-2">Checkout with a few clicks</h3>
+                            <p class="text-gray-600">Shop with your SDJ account at various online stores. Enjoy a faster checkout process.</p>
+                            <div class="image-container">
+                                <img src="./images/check.jpg" alt="Checkout" class="slide-image">
+                                <img src="./images/check1.jpg" alt="Checkout" class="slide-image">
+                                <img src="./images/check2.jpg" alt="Checkout" class="slide-image">
+                                <img src="./images/check4.jpg" alt="Checkout" class="slide-image">
+                            </div>
+                            <div class="mt-4">
+                                <button class="primary-button py-2 px-4 rounded-md text-sm">Learn More</button>
+                            </div>
+                        </div>
+                        <div class="p-6 bg-white rounded-lg shadow-md feature-slide">
+                            <h3 class="text-xl font-semibold text-gray-700 mb-2">Confidently send payments</h3>
+                            <p class="text-gray-600">Send payments to friends, family, and businesses securely and easily.</p>
+                            <div class="image-container">
+                                <img src="./images/input.jpg" alt="Send Payments" class="slide-image">
+                                <img src="./images/input1.jpg" alt="Send Payments" class="slide-image">
+                                <img src="./images/input 2.jpg" alt="Send Payments" class="slide-image">
+                                <img src="./images/input 3.avif" alt="Send Payments" class="slide-image">
+                            </div>
+                            <div class="mt-4">
+                                <button class="primary-button py-2 px-4 rounded-md text-sm">Send Now</button>
+                            </div>
+                        </div>
+                        <div class="p-6 bg-white rounded-lg shadow-md feature-slide">
+                            <h3 class="text-xl font-semibold text-gray-700 mb-2">Safe, private, secure</h3>
+                            <p class="text-gray-600">Your data is encrypted, keeping your financial information safe.</p>
+                            <div class="image-container">
+                                <!-- Fixed the incomplete image src -->
+                                <img src="./images/output.jpg" alt="Security" class="slide-image">
+                                <img src="./images/link.jpg" alt="Security" class="slide-image">
+                                <img src="./images/secure .jpg" alt="Security" class="slide-image">
+                                <img src="./images/secure 1.jpg" alt="Security" class="slide-image">
+                            </div>
+                            <div class="mt-4">
+                                <button class="primary-button py-2 px-4 rounded-md text-sm">Learn More</button>
+                            </div>
+                        </div>
+                        <div class="p-6 bg-white rounded-lg shadow-md feature-slide">
+                            <h3 class="text-xl font-semibold text-gray-700 mb-2">Withdraw funds easily</h3>
+                            <p class="text-gray-600">Withdraw your SDJ balance to your linked bank accounts quickly.</p>
+                             <div class="image-container">
+                                <img src="./images/withdraw.jpg" alt="Withdraw" class="slide-image">
+                                <img src="./images/withdrawn 1.jpg" alt="Withdraw" class="slide-image">
+                                <img src="./images/withdrawn 3.jpg" alt="Withdraw" class="slide-image">
+                                <img src="./images/withdrawn 2.jpg" alt="Withdraw" class="slide-image">
+                            </div>
+                            <div class="mt-4">
+                                <button class="primary-button py-2 px-4 rounded-md text-sm">Withdraw Funds</button>
+                            </div>
+                        </div>
+                        <div class="p-6 bg-white rounded-lg shadow-md feature-slide">
+                            <h3 class="text-xl font-semibold text-gray-700 mb-2">Link external accounts</h3>
+                            <p class="text-gray-600">Easily connect your bank accounts and cards to your SDJ wallet.</p>
+                             <div class="image-container">
+                                <img src="./images/account.jpg" alt="Link Accounts" class="slide-image">
+                                <img src="./images/account 1.jpg" alt="Link Accounts" class="slide-image">
+                                <img src="./images/account 2.jpg" alt="Link Accounts" class="slide-image">
+                                <img src="./images/account 1.jpg" alt="Link Accounts" class="slide-image">
+                            </div>
+                            <div class="mt-4">
+                                <button class="primary-button py-2 px-4 rounded-md text-sm">Link Account</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <p class="text-gray-600 text-sm">Showing page 1 of 1</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-12 text-center">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">Join the millions who love SDJ</h2>
+                <p class="text-lg text-gray-600 mb-8">Spend, send, and manage your transactions with ease and security—all in one place. Download the app on your phone or sign up for free online.</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="#" class="primary-button py-3 px-6 rounded-md">Get the App</a>
+                    <a href="#signup" class="secondary-button py-3 px-6 rounded-md nav-link" data-target="signup-content">Sign Up for Free</a>
+                </div>
+            </section>
+
+            <section class="py-8 bg-gray-100 rounded-lg shadow-md">
+                <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">The SDJ App</h3>
+                        <a href="#" class="text-blue-600 hover:underline">Learn More</a>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">How SDJ Works</h3>
+                        <a href="#" class="text-blue-600 hover:underline">Discover</a>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Help</h3>
+                        <a href="#" class="text-blue-600 hover:underline">Contact Us</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- About Us Page Content -->
+        <div id="about-content" class="content-section">
+            <section class="text-center py-12">
+                <h1 class="text-4xl font-bold text-gray-800 mb-6">About SDJ Payment Service</h1>
+                <p class="text-lg text-gray-600 mb-8">Empowering secure and seamless financial interactions for everyone.</p>
+            </section>
+
+            <section class="py-12 bg-gray-50 rounded-lg shadow-md mb-8">
+                <div class="container mx-auto px-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                        <div>
+                            <h2 class="text-3xl font-semibold text-gray-800 mb-4">Our Mission</h2>
+                            <p class="text-gray-700 leading-relaxed mb-4">
+                                At SDJ, our mission is to simplify payments and make financial transactions effortless, secure, and accessible for individuals and businesses worldwide. We believe in a future where managing your money is intuitive and worry-free.
+                            </p>
+                            <p class="text-gray-700 leading-relaxed">
+                                We are committed to building innovative solutions that empower our users with control over their finances, ensuring privacy and security every step of the way.
+                            </p>
+                        </div>
+                        <div>
+                            <img src="./images/our mission1.jpg" alt="Our Mission" class="rounded-lg shadow-lg w-full h-auto object-cover">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-12">
+                <div class="container mx-auto px-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                        <div>
+                            <img src="./images/value1.jpg" alt="Our Values" class="rounded-lg shadow-lg w-full h-auto object-cover">
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-semibold text-gray-800 mb-4">Our Values</h2>
+                            <ul class="list-disc list-inside text-gray-700 leading-relaxed space-y-2">
+                                <li><strong>Security:</strong> Protecting your financial data is our top priority.</li>
+                                <li><strong>Innovation:</b> Continuously improving our services to meet your evolving needs.</li>
+                                <li><strong>Accessibility:</strong> Making financial services available to everyone, everywhere.</li>
+                                <li><strong>Transparency:</strong> Clear and honest communication about our services and fees.</li>
+                                <li><strong>Customer Focus:</strong> Dedicated to providing exceptional support and user experience.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-12 bg-gray-50 rounded-lg shadow-md mt-8">
+                <div class="container mx-auto text-center px-6">
+                    <h2 class="text-3xl font-semibold text-gray-800 mb-6">Our Journey</h2>
+                    <p class="text-gray-700 leading-relaxed mb-6">
+                        SDJ Payment Service was founded in [Year] with a vision to revolutionize the way people interact with their money. Starting as a small team with a big idea, we've grown into a trusted platform serving millions of users globally. Our journey has been marked by continuous innovation, a relentless pursuit of security, and a deep commitment to our users.
+                    </p>
+                    <p class="text-gray-700 leading-relaxed">
+                        From our humble beginnings, we have expanded our services to include seamless online checkouts, secure peer-to-peer payments, easy fund withdrawals, and robust account linking capabilities. We're proud of the milestones we've achieved and excited for the future as we continue to grow and serve our community.
+                    </p>
+                </div>
+            </section>
+
+            <section class="py-12 text-center">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">Ready to experience SDJ?</h2>
+                <p class="text-lg text-gray-600 mb-8">Join our growing community and discover a simpler way to manage your payments.</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="#signup" class="primary-button py-3 px-6 rounded-md nav-link" data-target="signup-content">Sign Up for Free</a>
+                    <a href="#login" class="secondary-button py-3 px-6 rounded-md nav-link" data-target="login-content">Login</a>
+                </div>
+            </section>
+        </div>
+
+        <!--Our services content-->
+        <div id="services-content" class="content-section">
+        <section class="text-center py-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-6">Our Services</h1>
+            <p class="text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
+                At SDJ Payment Service, we offer a comprehensive suite of secure and efficient payment solutions designed to meet your every financial need.
+            </p>
+        </section>
+
+        <section class="py-12 bg-white rounded-lg shadow-md mb-8">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="p-6 text-center border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="service-icon mx-auto">💳</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Seamless Online Payments</h3>
+                        <p class="text-gray-600">
+                            Make purchases on your favorite e-commerce sites with ease and security. Our streamlined checkout process ensures a smooth transaction every time.
+                        </p>
+                        <a href="#" class="text-orange-600 hover:text-orange-500 mt-4 inline-block font-medium">Learn More &rarr;</a>
+                    </div>
+
+                    <div class="p-6 text-center border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="service-icon mx-auto">💸</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Send & Receive Money</h3>
+                        <p class="text-gray-600">
+                            Send money to friends, family, or businesses globally. Our secure platform ensures your funds reach their destination quickly and safely.
+                        </p>
+                        <a href="#" class="text-orange-600 hover:text-orange-500 mt-4 inline-block font-medium">Send Now &rarr;</a>
+                    </div>
+
+                    <div class="p-6 text-center border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="service-icon mx-auto">🧾</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Automated Bill Payments</h3>
+                        <p class="text-gray-600">
+                            Never miss a due date again. Set up recurring payments for your utilities, subscriptions, and other bills with automated convenience.
+                        </p>
+                        <a href="#" class="text-orange-600 hover:text-orange-500 mt-4 inline-block font-medium">Manage Bills &rarr;</a>
+                    </div>
+
+                    <div class="p-6 text-center border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="service-icon mx-auto">🏦</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Easy Fund Withdrawals</h3>
+                        <p class="text-gray-600">
+                            Withdraw your SDJ balance directly to your linked bank accounts or mobile money wallets with just a few clicks.
+                        </p>
+                        <a href="#" class="text-orange-600 hover:text-orange-500 mt-4 inline-block font-medium">Withdraw Funds &rarr;</a>
+                    </div>
+
+                    <div class="p-6 text-center border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="service-icon mx-auto">🔗</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Link External Accounts</h3>
+                        <p class="text-gray-600">
+                            Connect your bank accounts, debit cards, and credit cards securely to your SDJ wallet for easy funding and withdrawals.
+                        </p>
+                        <a href="#" class="text-orange-600 hover:text-orange-500 mt-4 inline-block font-medium">Link Account &rarr;</a>
+                    </div>
+
+                    <div class="p-6 text-center border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="service-icon mx-auto">📈</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Detailed Transaction History</h3>
+                        <p class="text-gray-600">
+                            Keep track of all your financial activities with a clear and comprehensive transaction history, available anytime.
+                        </p>
+                        <a href="#" class="text-orange-600 hover:text-orange-500 mt-4 inline-block font-medium">View History &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 text-center bg-gray-50 rounded-lg shadow-md">
+            <h2 class="text-3xl font-semibold text-gray-800 mb-6">Ready to Experience Seamless Payments?</h2>
+            <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+                Join SDJ Payment Service today and take control of your finances with our secure, fast, and easy-to-use platform.
+            </p>
+            <div class="flex justify-center space-x-4">
+                <a href="#signup" class="primary-button py-3 px-6 rounded-md nav-link" data-target="signup-content">Get Started Now</a>
+                <a href="#about" class="secondary-button py-3 px-6 rounded-md nav-link" data-target="about-content">Learn More About Us</a>
+            </div>
+        </section>
+    </div>
+
+    <!--contact page content-->
+    <div id="contact-content" class="content-section">
+        <main class="contact-us-container">
+            <h1>Contact Us</h1>
+
+            <p class="intro-text">
+                Have a question, feedback, or just want to say hello? We'd love to hear from you!
+                Please use the form below or connect with us through our other channels.
+            </p>
+
+            <section class="contact-form-section">
+                <h2>Send Us a Message</h2>
+                <form action="your-server-side-script.php" method="POST" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Your Name <span class="required">*</span></label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Your Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject (Optional)</label>
+                        <input type="text" id="subject" name="subject">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Your Message <span class="required">*</span></label>
+                        <textarea id="message" name="message" rows="8" required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-button primary-button">Send Message</button>
+                </form>
+                <p class="response-note">We typically respond within 24-48 business hours.</p>
+            </section>
+
+            <section class="other-contact-methods">
+                <h2>Other Ways to Connect</h2>
+
+                <div class="contact-info-grid">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Email</h3>
+                        <p><a href="mailto:info@yourwebsite.com">info@yourwebsite.com</a></p>
+                    </div>
+
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <h3>Phone</h3>
+                        <p><a href="tel:+15551234567">+1 (555) 123-4567</a></p>
+                        <p class="hours">(Mon-Fri, 9 AM - 5 PM EAT)</p>
+                    </div>
+
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>1.504145, 36.764822, Kiserian</h3>
+                        <p>THE SDJ COMPANY</p>
+                        <p>Kiserian-Isinya Pipeline Road, Ngong, Kenya</p>
+                    </div>
+                </div>
+
+                <h3>Connect on Social Media</h3>
+                <div class="social-links">
+                    <a href="https://facebook.com/yourprofile" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://x.com/yourprofile" target="_blank" aria-label="X (formerly Twitter)"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://linkedin.com/in/yourprofile" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://instagram.com/yourprofile" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </section>
+
+            <section class="faq-section">
+                <h2>Looking for Answers?</h2>
+                <p>Check out our <a href="#">Frequently Asked Questions (FAQ)</a> page for quick answers to common questions.</p>
+            </section>
+
+            <section class="map-section">
+                <h2>Find Us on the Map</h2>
+                <div class="map-embed">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8055615714243!2d36.817223714754!3d-1.2920659990590008!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1172d84d0b67%3A0x5028020e6f76538!2sKiserian%2C%20Kenya!5e0!3m2!1sen!2sus!4v1678234567890!5m2!1sen!2sus" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+                <p class="map-note">Note: The map shows our general location in Nairobi, Kenya.</p>
+            </section>
+        </div>
+    </div>
+
+    
+
+        <!-- Login Page Content -->
+        <div id="login-content" class="content-section">
+            <div class="min-h-screen-minus-header-footer">
+                <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+                    <h1 class="text-3xl font-bold text-gray-800 text-center mb-6">Login to Your SDJ Account</h1>
+                    <form id="loginForm" method="POST" class="space-y-6">
+                        <div>
+                            <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <input type="email" id="login-email" name="email" required class="input-field" placeholder="you@example.com">
+                        </div>
+                        <div>
+                            <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <input type="password" id="login-password" name="password" required class="input-field" placeholder="••••••••">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded">
+                                <label for="remember-me" class="ml-2 block text-sm text-gray-900">Remember me</label>
+                            </div>
+                            <div class="text-sm">
+                                <a href="#" class="font-medium text-orange-600 hover:text-orange-500">Forgot your password?</a>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="submit" class="primary-button w-full py-2.5 px-4 rounded-md text-lg">Login</button>
+                        </div>
+                    </form>
+                    <div class="mt-6 text-center">
+                        <p class="text-sm text-gray-600">Don't have an account?
+                            <a href="#signup" class="font-medium text-orange-600 hover:text-orange-500 nav-link" data-target="signup-content">Sign Up</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sign Up Page Content -->
+        <div id="signup-content" class="content-section">
+            <div class="min-h-screen-minus-header-footer">
+                <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+                    <h1 class="text-3xl font-bold text-gray-800 text-center mb-6">Create Your SDJ Account</h1>
+                    <form id="signupForm" method="POST" class="space-y-6">
+                        <div>
+                            <label for="full-name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <input type="text" id="full-name" name="full-name" required class="input-field" placeholder="John Doe">
+                        </div>
+                        <div>
+                            <label for="signup-email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <input type="email" id="signup-email" name="email" required class="input-field" placeholder="you@example.com">
+                        </div>
+                        <div>
+                            <label for="signup-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <input type="password" id="signup-password" name="password" required class="input-field" placeholder="••••••••">
+                        </div>
+                        <div>
+                            <label for="confirm-password" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                            <input type="password" id="confirm-password" name="confirm-password" required class="input-field" placeholder="••••••••">
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input id="terms" name="terms" type="checkbox" required class="focus:ring-orange-500 h-4 w-4 text-orange-600 border-gray-300 rounded">
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="terms" class="font-medium text-gray-700">I agree to the
+                                    <a href="#" class="text-orange-600 hover:text-orange-500">Terms of Service</a> and
+                                    <a href="#" class="text-orange-600 hover:text-orange-500">Privacy Policy</a>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="submit" class="primary-button w-full py-2.5 px-4 rounded-md text-lg">Sign Up</button>
+                        </div>
+                    </form>
+                    <div class="mt-6 text-center">
+                        <p class="text-sm text-gray-600">Already have an account?
+                            <a href="#login" class="font-medium text-orange-600 hover:text-orange-500 nav-link" data-target="login-content">Login</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page Content (New home for logged-in users) -->
+        <div id="dashboard-content" class="content-section">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <section class="lg:col-span-2 bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Welcome, User!</h2>
+
+                    <div class="flex items-center justify-between bg-blue-50 p-4 rounded-md mb-6">
+                        <div>
+                            <p class="text-gray-600 text-sm">SDJ Balance</p>
+                            <p class="text-3xl font-bold text-blue-700 balance-amount">$1,234.56</p>
+                        </div>
+                        <button class="primary-button py-2 px-4 rounded-full">
+                            Add Money
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
+                        <button class="flex flex-col items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition duration-300 secondary-button">
+                            <svg class="w-8 h-8 text-blue-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                            <span class="text-sm text-gray-700">Send</span>
+                        </button>
+                        <button class="flex flex-col items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition duration-300 secondary-button">
+                            <svg class="w-8 h-8 text-green-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            <span class="text-sm text-gray-700">Request</span>
+                        </button>
+                        <button class="flex flex-col items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition duration-300 secondary-button">
+                            <svg class="w-8 h-8 text-purple-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                            <span class="text-sm text-gray-700">Pay Bills</span>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Recent Activity</h3>
+                        <ul class="divide-y divide-gray-200">
+                            <li class="py-4 flex items-center justify-between recent-activity-item">
+                                <div>
+                                    <p class="text-gray-900 font-medium">Payment to John Doe</p>
+                                    <p class="text-gray-600 text-sm">May 23, 2025</p>
+                                </div>
+                                <p class="text-red-600 font-medium">-$50.00</p>
+                            </li>
+                            <li class="py-4 flex items-center justify-between recent-activity-item">
+                                <div>
+                                    <p class="text-gray-900 font-medium">Received from Jane Smith</p>
+                                    <p class="text-gray-600 text-sm">May 22, 2025</p>
+                                </div>
+                                <p class="text-green-600 font-medium">+$120.00</p>
+                            </li>
+                            <li class="py-4 flex items-center justify-between recent-activity-item">
+                                <div>
+                                    <p class="text-gray-900 font-medium">Online Purchase - Store X</p>
+                                    <p class="text-gray-600 text-sm">May 21, 2025</p>
+                                </div>
+                                <p class="text-red-600 font-medium">-$35.50</p>
+                            </li>
+                        </ul>
+                        <a href="#" class="block text-blue-600 hover:underline mt-6 text-center underline-link">View All Activity</a>
+                    </div>
+                </section>
+
+                <aside class="lg:col-span-1 bg-white rounded-lg shadow-lg p-6 md:p-8 h-fit">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Linked Accounts</h2>
+                    <ul class="space-y-4 mb-6">
+                        <li class="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                            <div class="flex items-center">
+                                <svg class="w-6 h-6 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 1m3-1V4m0 0h7a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2z"></path></svg>
+                                <span class="text-gray-700">Bank of America (****1234)</span>
+                            </div>
+                            <button class="text-red-500 hover:text-red-700 text-sm secondary-button">Remove</button>
+                        </li>
+                        <li class="flex flex-col items-center justify-between p-3 bg-gray-50 rounded-md">
+                            <div class="flex items-center">
+                                <svg class="w-6 h-6 text-purple-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                <span class="text-gray-700">Visa Credit (****5678)</span>
+                            </div>
+                            <button class="text-red-500 hover:text-red-700 text-sm secondary-button">Remove</button>
+                        </li>
+                    </ul>
+                    <button class="w-full primary-button py-2 px-4 rounded-md transition duration-300">
+                        Link New Account
+                    </button>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white p-4 md:p-6 mt-auto">
+        <div class="container mx-auto text-center text-sm">
+            <p>&copy; 2025 SDJ. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-2">
+                <a href="#about" class="hover:underline nav-link" data-target="about-content">About Us</a> <a href="#services" class="hover:underline nav-link" data-target="services-content">Services</a> <a href="#" class="hover:underline">Privacy</a>
+                <a href="#" class="hover:underline">Legal</a>
+                <a href="#" class="hover:underline">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Global state to simulate user login status
+        let isLoggedIn = false;
+    
+        // Get navigation elements
+        const loggedOutNav = document.getElementById('logged-out-nav');
+        const loggedInNav = document.getElementById('logged-in-nav');
+        const logoutLink = document.getElementById('logout-link');
+    
+        // Function to update the visibility of navigation links based on login status
+        function updateNavigation() {
+            if (isLoggedIn) {
+                loggedOutNav.classList.add('hidden');
+                loggedInNav.classList.remove('hidden');
+            } else {
+                loggedOutNav.classList.remove('hidden');
+                loggedInNav.classList.add('hidden');
+            }
+        }
+    
+        // Function to show/hide content sections (client-side routing)
+        function showSection(sectionId) {
+            // Hide all content sections first
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+    
+            // Show the target section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                // Scroll to the top of the main content area for a fresh view
+                document.querySelector('main').scrollTo(0, 0);
+            }
+        }
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Slideshow functionality for the public home page ---
+            const featureSlides = document.querySelectorAll('#public-home-content .feature-slide');
+    
+            featureSlides.forEach(slide => {
+              const images = slide.querySelectorAll('.slide-image');
+              let currentImageIndex = 0;
+    
+              // Only start slideshow if there are images
+              if (images.length > 0) {
+                // Set the first image as active initially
+                images[currentImageIndex].classList.add('active');
+    
+                function showNextImage() {
+                  images[currentImageIndex].classList.remove('active');
+                  currentImageIndex = (currentImageIndex + 1) % images.length;
+                  images[currentImageIndex].classList.add('active');
+                }
+    
+                setInterval(showNextImage, 3000); // Change image every 3 seconds
+              }
+            });
+    
+            // --- Client-side routing event listeners for navigation links ---
+            // Combine all nav links from both logged-in and logged-out states
+            const allNavLinks = document.querySelectorAll('.nav-link');
+    
+            allNavLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent default link behavior (page reload)
+                    const targetId = this.getAttribute('data-target');
+                    if (targetId) {
+                        showSection(targetId);
+                        // Update the URL hash without reloading the page
+                        window.location.hash = this.getAttribute('href').substring(1);
+                    }
+                });
+            });
+    
+            // --- Form Submission Handlers ---
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); // Prevent default form submission (page reload)
+    
+                    // In a real application, you would send this data to a server
+                    // and handle authentication here.
+                    // For this example, we simulate success:
+                    console.log('Login attempt simulated. Redirecting to dashboard.');
+    
+                    isLoggedIn = true; // Set login status to true
+                    updateNavigation(); // Update header navigation
+                    showSection('dashboard-content'); // Show the dashboard
+                    window.location.hash = 'dashboard'; // Update URL hash
+                    loginForm.reset(); // Clear form fields
+                });
+            }
+    
+            const signupForm = document.getElementById('signupForm');
+            if (signupForm) {
+                signupForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); // Prevent default form submission (page reload)
+    
+                    // In a real application, you would send this data to a server
+                    // and handle user registration here.
+                    // For this example, we simulate success:
+                    console.log('Sign Up attempt simulated. Redirecting to dashboard.');
+    
+                    isLoggedIn = true; // Set login status to true
+                    updateNavigation(); // Update header navigation
+                    showSection('dashboard-content'); // Show the dashboard
+                    window.location.hash = 'dashboard'; // Update URL hash
+                    signupForm.reset(); // Clear form fields
+                });
+            }
+    
+            // --- NEW CONTACT FORM SUBMISSION HANDLER GOES HERE ---
+            const contactForm = document.querySelector('#contact-content .contact-form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); // Prevent the default form submission (page reload)
+    
+                    // For this example, we'll just show an alert and clear the form:
+                    alert('Your message has been sent successfully! We will get back to you soon.');
+                    contactForm.reset(); // Clear all form fields
+                    console.log('Contact form submitted successfully (simulated).');
+                });
+            }
+            // --- END NEW CONTACT FORM SUBMISSION HANDLER ---
+    
+            // --- Log Out Handler ---
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent default link behavior
+                    console.log('Logging out...');
+    
+                    isLoggedIn = false; // Set login status to false
+                    updateNavigation(); // Update header navigation
+                    showSection('public-home-content'); // Show the public home page
+                    window.location.hash = 'home'; // Reset URL hash
+                });
+            }
+    
+            // --- Initial Page Load Logic ---
+            // Check URL hash on load to determine which section to display
+            const initialHash = window.location.hash.substring(1); // Remove the '#'
+    
+            if (initialHash && document.getElementById(initialHash + '-content')) {
+                // If hash exists and corresponds to a content section, show it
+                showSection(initialHash + '-content');
+            } else {
+                // Default to public home content if no valid hash is present
+                showSection('public-home-content');
+                window.location.hash = 'home'; // Set hash to home
+            }
+    
+            // Ensure navigation is correctly updated on initial load (e.g., if refreshed while logged in)
+            // For this simple example, we assume initial load is always logged out.
+            // In a real app, you'd check a persistent token (e.g., localStorage).
+            updateNavigation();
+    
+        }); // End of DOMContentLoaded
+    </script>
+    </body>
+    </html>

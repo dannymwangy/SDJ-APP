@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services - SDJ Payment Service</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .primary-button {
+            background-color: #ff8c00; /* Orange */
+            color: white;
+            font-weight: 500;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+        }
+        .primary-button:hover {
+            background-color: #e07a00; /* Darker Orange */
+            transform: scale(1.05);
+        }
+        .secondary-button {
+            background-color: #f3f4f6; /* Light Gray */
+            color: #4b5563; /* Gray-700 */
+            font-weight: 500;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .secondary-button:hover {
+            background-color: #e5e7eb; /* Slightly Darker Light Gray */
+        }
+        /* Custom styles for service icons - replace with actual icons or images */
+        .service-icon {
+            font-size: 3rem; /* Adjust size as needed */
+            color: #ff8c00; /* Orange */
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-white shadow-md p-4 md:p-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="text-2xl font-bold text-black">SDJ</div>
+            <nav class="space-x-4 md:space-x-6 text-gray-700">
+                <a href="index.html" class="hover:text-orange-500 transition duration-300">Home</a>
+                <a href="login.html" class="hover:text-orange-500 transition duration-300">Login</a>
+                <a href="signup.html" class="hover:text-orange-500 transition duration-300">Sign Up</a>
+                <a href="about.html" class="hover:text-orange-500 transition duration-300">About</a>
+                <a href="services.html" class="hover:text-orange-500 transition duration-300">Services</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto p-4 md:p-8">
+        <section class="text-center py-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-6">Our Services</h1>
+            <p class="text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
+                At SDJ Payment Service, we offer a comprehensive suite of secure and efficient payment solutions designed to meet your every financial need.
+            </p>
+        </section>
+
+        <section class="py-12 bg-white rounded-lg shadow-md mb-8">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="p-6 text-center border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="service-icon mx-auto">💳</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Seamless Online Payments</h3>
+                        <p class="text-gray-600">
+                            Make purchases on your favorite e-commerce sites with ease and security. Our streamlined checkout process ensures a smooth transaction every time.
+                        </p>
+                        <a href="#" class="text-orange-600 hover:text-orange-500 mt-4 inline-block font-medium">Learn More &rarr;</a>
+                    </div>
+
+                    <div class="p-6 text-center border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="service-icon mx-auto">💸</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Send & Receive Money</h3>
+                        <p class="text-gray-600">
+                            Send money to friends, family, or businesses globally. Our secure platform ensures your funds reach their destination quickly and safely.
+                        </p>
+                        <a href="#" class="text-orange-600 hover:text-orange-500 mt-4 inline-block font-medium">Send Now &rarr;</a>
+                    </div>
+
+                    <div class="p-6 text-center border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="service-icon mx-auto">🧾</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Automated Bill Payments</h3>
+                        <p class="text-gray-600">
+                            Never miss a due date again. Set up recurring payments for your utilities, subscriptions, and other bills with automated convenience.
+                        </p>
+                        <a href="#" class="text-orange-600 hover:text-orange-500 mt-4 inline-block font-medium">Manage Bills &rarr;</a>
+                    </div>
+
+                    <div class="p-6 text-center border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="service-icon mx-auto">🏦</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Easy Fund Withdrawals</h3>
+                        <p class="text-gray-600">
+                            Withdraw your SDJ balance directly to your linked bank accounts or mobile money wallets with just a few clicks.
+                        </p>
+                        <a href="#" class="text-orange-600 hover:text-orange-500 mt-4 inline-block font-medium">Withdraw Funds &rarr;</a>
+                    </div>
+
+                    <div class="p-6 text-center border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="service-icon mx-auto">🔗</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Link External Accounts</h3>
+                        <p class="text-gray-600">
+                            Connect your bank accounts, debit cards, and credit cards securely to your SDJ wallet for easy funding and withdrawals.
+                        </p>
+                        <a href="#" class="text-orange-600 hover:text-orange-500 mt-4 inline-block font-medium">Link Account &rarr;</a>
+                    </div>
+
+                    <div class="p-6 text-center border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="service-icon mx-auto">📈</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Detailed Transaction History</h3>
+                        <p class="text-gray-600">
+                            Keep track of all your financial activities with a clear and comprehensive transaction history, available anytime.
+                        </p>
+                        <a href="#" class="text-orange-600 hover:text-orange-500 mt-4 inline-block font-medium">View History &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 text-center bg-gray-50 rounded-lg shadow-md">
+            <h2 class="text-3xl font-semibold text-gray-800 mb-6">Ready to Experience Seamless Payments?</h2>
+            <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+                Join SDJ Payment Service today and take control of your finances with our secure, fast, and easy-to-use platform.
+            </p>
+            <div class="flex justify-center space-x-4">
+                <a href="signup.html" class="primary-button py-3 px-6 rounded-md">Get Started Now</a>
+                <a href="about.html" class="secondary-button py-3 px-6 rounded-md">Learn More About Us</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 md:p-6 mt-auto">
+        <div class="container mx-auto text-center text-sm">
+            <p>&copy; 2025 SDJ. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-2">
+                <a href="#" class="hover:underline">Privacy</a>
+                <a href="#" class="hover:underline">Legal</a>
+                <a href="#" class="hover:underline">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

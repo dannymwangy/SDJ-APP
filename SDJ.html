@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDJ Payment Service</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .recent-activity-item:hover {
+            background-color: #f7f7f7;
+            transition: background-color 0.2s ease-in-out;
+        }
+        header .text-black:hover {
+            color: #ff8c00; /* Dark Orange on Hover */
+        }
+        .logo-placeholder {
+            width: 50px; /* Adjust as needed */
+            height: 50px; /* Adjust as needed */
+            background: linear-gradient(to right, black, #ff8c00); /* Black to Orange Gradient */
+            border-radius: 5px; /* Optional: Rounded corners */
+            cursor: pointer;
+        }
+        /* Improved Button Styles */
+        .primary-button {
+            background-color: #ff8c00; /* Orange */
+            color: white;
+            font-weight: 500;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+        }
+        .primary-button:hover {
+            background-color: #e07a00; /* Darker Orange */
+            transform: scale(1.05);
+        }
+        .secondary-button {
+            background-color: #f3f4f6; /* Light Gray */
+            color: #4b5563; /* Gray-700 */
+            font-weight: 500;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .secondary-button:hover {
+            background-color: #e5e7eb; /* Slightly Darker Light Gray */
+        }
+        /* Emphasis on Balance */
+        .balance-amount {
+            font-size: 2.5rem; /* Slightly larger */
+        }
+        /* Subtle Link Hover */
+        nav a:hover, .underline-link:hover {
+            opacity: 0.8;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <header class="bg-white shadow-md p-4 md:p-6">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center mb-4 md:mb-0">
+                <div class="logo-placeholder mr-2" id="logo"></div>
+                <div class="text-2xl font-bold text-black hover:text-orange-500 transition duration-300" id="logoText">
+                    SDJ
+                </div>
+            </div>
+            <nav id="mainNav" class="flex flex-wrap justify-center md:justify-end space-x-4 md:space-x-6 text-gray-700 hidden">
+                <a href="#" class="hover:text-orange-500 transition duration-300" id="homeLink">Home</a>
+                <a href="#" class="hover:text-orange-500 transition duration-300" id="sendRequestLink">Send & Request</a>
+                <a href="#" class="hover:text-orange-500 transition duration-300" id="walletLink">Wallet</a>
+                <a href="#" class="hover:text-orange-500 transition duration-300" id="activityLink">Activity</a>
+                <a href="#" class="hover:text-orange-500 transition duration-300">Help</a>
+                <a href="#" class="hover:text-orange-500 transition duration-300" id="logoutLink">Log Out</a>
+            </nav>
+            <nav id="guestNav" class="flex flex-wrap justify-center md:justify-end space-x-4 md:space-x-6 text-gray-700">
+                <a href="#" class="hover:text-orange-500 transition duration-300" id="loginLink">Login</a>
+                <a href="#" class="hover:text-orange-500 transition duration-300" id="signupLink">Sign Up</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto p-4 md:p-8">
+        <!-- Home Page -->
+        <div id="homePage">
+            <section class="text-center py-12">
+                <h1 class="text-4xl font-bold text-gray-800 mb-6">Welcome to SDJ Payment Service</h1>
+                <p class="text-lg text-gray-600 mb-8">Your trusted partner for secure and convenient payments.</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="#" class="primary-button py-2 px-6 rounded-md transition duration-300" id="loginLinkHome">Login</a>
+                    <a href="#" class="secondary-button py-2 px-6 rounded-md transition duration-300" id="signupLinkHome">Sign Up</a>
+                </div>
+            </section>
+
+            <section class="py-12">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Features</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <div class="flex justify-center mb-4">
+                            <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2 text-center">Send Money</h3>
+                        <p class="text-gray-600 text-center">Easily send money to friends and family.</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <div class="flex justify-center mb-4">
+                            <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2 text-center">Request Money</h3>
+                        <p class="text-gray-600 text-center">Request money from friends and family.</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <div class="flex justify-center mb-4">
+                            <svg class="w-12 h-12 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2 text-center">Pay Bills</h3>
+                        <p class="text-gray-600 text-center">Pay your bills conveniently.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Login Page -->
+        <div id="loginPage" class="hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 md:p-8 w-full max-w-md mx-auto">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Login</h2>
+
+                <form id="loginForm">
+                    <div class="mb-4">
+                        <label for="loginEmail" class="block text-gray-700 text-sm font-medium mb-2">Email</label>
+                        <input type="email" id="loginEmail" name="email" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" required>
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="loginPassword" class="block text-gray-700 text-sm font-medium mb-2">Password</label>
+                        <input type="password" id="loginPassword" name="password" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" required>
+                    </div>
+
+                    <button type="submit" class="w-full primary-button py-2 px-4 rounded-md transition duration-300">
+                        Login
+                    </button>
+                </form>
+
+                <div class="mt-4 text-center">
+                    <a href="#" class="text-blue-600 hover:underline">Forgot Password?</a>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600">Don't have an account? <a href="#" class="text-blue-600 hover:underline" id="signupLinkFromLogin">Sign Up</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sign Up Page -->
+        <div id="signupPage" class="hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 md:p-8 w-full max-w-md mx-auto">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Sign Up</h2>
+
+                <form id="signupForm">
+                    <div class="mb-4">
+                        <label for="signupName" class="block text-gray-700 text-sm font-medium mb-2">Name</label>
+                        <input type="text" id="signupName" name="name" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="signupEmail" class="block text-gray-700 text-sm font-medium mb-2">Email</label>
+                        <input type="email" id="signupEmail" name="email" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" required>
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="signupPassword" class="block text-gray-700 text-sm font-medium mb-2">Password</label>
+                        <input type="password" id="signupPassword" name="password" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" required>
+                    </div>
+
+                    <button type="submit" class="w-full primary-button py-2 px-4 rounded-md transition duration-300">
+                        Sign Up
+                    </button>
+                </form>
+
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600">Already have an account? <a href="#" class="text-blue-600 hover:underline" id="loginLinkFromSignup">Login</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboardPage" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <section class="lg:col-span-2 bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Welcome, <span id="userName">User</span>!</h2>
+
+                    <div class="flex items-center justify-between bg-blue-50 p-4 rounded-md mb-6">
+                        <div>
+                            <p class="text-gray-600 text-sm">SDJ Balance</p>
+                            <p class="text-3xl font-bold text-blue-700 balance-amount">$1,234.56</p>
+                        </div>
+                        <button class="primary-button py-2 px-4 rounded-full">
+                            Add Money
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
+                        <button class="flex flex-col items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition duration-300 secondary-button">
+                            <svg class="w-8 h-8 text-blue-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                            <span class="text-sm text-gray-700">Send</span>
+                        </button>
+                        <button class="flex flex-col items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition duration-300 secondary-button">
+                            <svg class="w-8 h-8 text-green-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            <span class="text-sm text-gray-700">Request</span>
+                        </button>
+                        <button class="flex flex-col items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition duration-300 secondary-button">
+                            <svg class="w-8 h-8 text-purple-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                            <span class="text-sm text-gray-700">Pay Bills</span>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Recent Activity</h3>
+                        <ul class="divide-y divide-gray-200">
+                            <li class="py-4 flex items-center justify-between recent-activity-item">
+                                <div>
+                                    <p class="text-gray-900 font-medium">Payment to John Doe</p>
+                                    <p class="text-gray-600 text-sm">May 23, 2025</p>
+                                </div>
+                                <p class="text-red-600 font-medium">-$50.00</p>
+                            </li>
+                            <li class="py-4 flex items-center justify-between recent-activity-item">
+                                <div>
+                                    <p class="text-gray-900 font-medium">Received from Jane Smith</p>
+                                    <p class="text-gray-600 text-sm">May 22, 2025</p>
+                                </div>
+                                <p class="text-green-600 font-medium">+$120.00</p>
+                            </li>
+                            <li class="py-4 flex items-center justify-between recent-activity-item">
+                                <div>
+                                    <p class="text-gray-900 font-medium">Online Purchase - Store X</p>
+                                    <p class="text-gray-600 text-sm">May 21, 2025</p>
+                                </div>
+                                <p class="text-red-600 font-medium">-$35.50</p>
+                            </li>
+                        </ul>
+                        <a href="#" class="block text-blue-600 hover:underline mt-6 text-center underline-link">View All Activity</a>
+                    </div>
+                </section>
+
+                <aside class="lg:col-span-1 bg-white rounded-lg shadow-lg p-6 md:p-8 h-fit">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Linked Accounts</h2>
+                    <ul class="space-y-4 mb-6">
+                        <li class="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                            <div class="flex items-center">
+                                <svg class="w-6 h-6 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 1m3-1V4m0 0h7a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2z"></path></svg>
+                                <span class="text-gray-700">Bank of America (****1234)</span>
+                            </div>
+                            <button class="text-red-500 hover:text-red-700 text-sm secondary-button">Remove</button>
+                        </li>
+                        <li class="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                            <div class="flex items-center">
+                                <svg class="w-6 h-6 text-purple-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                <span class="text-gray-700">Visa Credit (****5678)</span>
+                            </div>
+                            <button class="text-red-500 hover:text-red-700 text-sm secondary-button">Remove</button>
+                        </li>
+                    </ul>
+                    <button class="w-full primary-button py-2 px-4 rounded-md transition duration-300">
+                        Link New Account
+                    </button>
+                </aside>
+            </div>
+        </div>
+
+        <!-- Wallet Page -->
+        <div id="walletPage" class="hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 md:p-8 w-full mx-auto">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Wallet</h2>
+
+                <div class="flex items-center justify-between bg-blue-50 p-4 rounded-md mb-6">
+                    <div>
+                        <p class="text-gray-600 text-sm">SDJ Balance</p>
+                        <p class="text-3xl font-bold text-blue-700 balance-amount">$1,234.56</p>
+                    </div>
+                    <button class="primary-button py-2 px-4 rounded-full">
+                        Add Money
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
+                    <button class="flex flex-col items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition duration-300 secondary-button">
+                        <svg class="w-8 h-8 text-blue-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                        <span class="text-sm text-gray-700">Send</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition duration-300 secondary-button">
+                        <svg class="w-8 h-8 text-green-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        <span class="text-sm text-gray-700">Request</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition duration-300 secondary-button">
+                        <svg class="w-8 h-8 text-purple-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                        <span class="text-sm text-gray-700">Pay Bills</span>
+                    </button>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Linked Accounts</h3>
+                    <ul class="space-y-4 mb-6">
+                        <li class="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                            <div class="flex items-center">
+                                <svg class="w-6 h-6 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 1m3-1V4m0 0h7a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2z"></path></svg>
+                                <span class="text-gray-700">Bank of America (****1234)</span>
+                            </div>
+                            <button class="text-red-500 hover:text-red-700 text-sm secondary-button">Remove</button>
+                        </li>
+                        <li class="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                            <div class="flex items-center">
+                                <svg class="w-6 h-6 text-purple-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                <span class="text-gray-700">Visa Credit (****5678)</span>
+                            </div>
+                            <button class="text-red-500 hover:text-red-700 text-sm secondary-button">Remove</button>
+                        </li>
+                    </ul>
+                    <button class="w-full primary-button py-2 px-4 rounded-md transition duration-300">
+                        Link New Account
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Page -->
+        <div id="activityPage" class="hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 md:p-8 w-full mx-auto">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Activity</h2>
+
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Recent Activity</h3>
+                    <ul class="divide-y divide-gray-200">
+                        <li class="py-4 flex items-center justify-between recent-activity-item">
+                            <div>
+                                <p class="text-gray-900 font-medium">Payment to John Doe</p>
+                                <p class="text-gray-600 text-sm">May 23, 2025</p>
+                            </div>
+                            <p class="text-red-600 font-medium">-$50.00</p>
+                        </li>
+                        <li class="py-4 flex items-center justify-between recent-activity-item">
+                            <div>
+                                <p class="text-gray-900 font-medium">Received from Jane Smith</p>
+                                <p class="text-gray-600 text-sm">May 22, 2025</p>
+                            </div>
+                            <p class="text-green-600 font-medium">+$120.00</p>
+                        </li>
+                        <li class="py-4 flex items-center justify-between recent-activity-item">
+                            <div>
+                                <p class="text-gray-900 font-medium">Online Purchase - Store X</p>
+                                <p class="text-gray-600 text-sm">May 21, 2025</p>
+                            </div>
+                            <p class="text-red-600 font-medium">-$35.50</p>
+                        </li>
+                    </ul>
+                    <a href="#" class="block text-blue-600 hover:underline mt-6 text-center underline-link">View All Activity</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Send & Request Page -->
+        <div id="sendRequestPage" class="hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 md:p-8 w-full mx-auto">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Send & Request</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">Send Money</h3>
+                        <form id="sendForm">
+                            <div class="mb-4">
+                                <label for="sendEmail" class="block text-gray-700 text-sm font-medium mb-2">Recipient Email</label>
+                                <input type="email" id="sendEmail" name="email" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="sendAmount" class="block text-gray-700 text-sm font-medium mb-2">Amount</label>
+                                <input type="number" id="sendAmount" name="amount" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" required>
+                            </div>
+
+                            <button type="submit" class="w-full primary-button py-2 px-4 rounded-md transition duration-300">
+                                Send
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">Request Money</h3>
+                        <form id="requestForm">
+                            <div class="mb-4">
+                                <label for="requestEmail" class="block text-gray-700 text-sm font-medium mb-2">Payer Email</label>
+                                <input type="email" id="requestEmail" name="email" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="requestAmount" class="block text-gray-700 text-sm font-medium mb-2">Amount</label>
+                                <input type="number" id="requestAmount" name="amount" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" required>
+                            </div>
+
+                            <button type="submit" class="w-full primary-button py-2 px-4 rounded-md transition duration-300">
+                                Request
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 md:p-6 mt-8">
+        <div class="container mx-auto text-center text-sm">
+            <p>&copy; 2025 SDJ. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-2">
+                <a href="#" class="hover:underline underline-link">Privacy</a>
+                <a href="#" class="hover:underline underline-link">Legal</a>
+                <a href="#" class="hover:underline underline-link">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('logo').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('dashboardPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('walletPage').classList.add('hidden');
+            document.getElementById('activityPage').classList.add('hidden');
+            document.getElementById('sendRequestPage').classList.add('hidden');
+            document.getElementById('homePage').classList.remove('hidden');
+            document.getElementById('mainNav').classList.add('hidden');
+            document.getElementById('guestNav').classList.remove('hidden');
+        });
+
+        document.getElementById('logoText').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('dashboardPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('walletPage').classList.add('hidden');
+            document.getElementById('activityPage').classList.add('hidden');
+            document.getElementById('sendRequestPage').classList.add('hidden');
+            document.getElementById('homePage').classList.remove('hidden');
+            document.getElementById('mainNav').classList.add('hidden');
+            document.getElementById('guestNav').classList.remove('hidden');
+        });
+
+        document.getElementById('homeLink').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('dashboardPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('walletPage').classList.add('hidden');
+            document.getElementById('activityPage').classList.add('hidden');
+            document.getElementById('sendRequestPage').classList.add('hidden');
+            document.getElementById('homePage').classList.remove('hidden');
+            document.getElementById('mainNav').classList.remove('hidden');
+        });
+
+        document.getElementById('sendRequestLink').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('dashboardPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('walletPage').classList.add('hidden');
+            document.getElementById('activityPage').classList.add('hidden');
+            document.getElementById('sendRequestPage').classList.remove('hidden');
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('mainNav').classList.remove('hidden');
+        });
+
+        document.getElementById('walletLink').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('dashboardPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('walletPage').classList.remove('hidden');
+            document.getElementById('activityPage').classList.add('hidden');
+            document.getElementById('sendRequestPage').classList.add('hidden');
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('mainNav').classList.remove('hidden');
+        });
+
+        document.getElementById('activityLink').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('dashboardPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('walletPage').classList.add('hidden');
+            document.getElementById('activityPage').classList.remove('hidden');
+            document.getElementById('sendRequestPage').classList.add('hidden');
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('mainNav').classList.remove('hidden');
+        });
+
+        document.getElementById('loginLink').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('guestNav').classList.add('hidden');
+        });
+
+        document.getElementById('loginLinkHome').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('guestNav').classList.add('hidden');
+        });
+
+        document.getElementById('signupLink').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('signupPage').classList.remove('hidden');
+            document.getElementById('guestNav').classList.add('hidden');
+        });
+
+        document.getElementById('signupLinkHome').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('signupPage').classList.remove('hidden');
+            document.getElementById('guestNav').classList.add('hidden');
+        });
+
+        document.getElementById('signupLinkFromLogin').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.remove('hidden');
+        });
+
+        document.getElementById('loginLinkFromSignup').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Retrieve user data from local storage
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => user.email === email && user.password === password);
+
+            if (user) {
+                // Store the logged-in user's information
+                localStorage.setItem('currentUser', JSON.stringify(user));
+
+                // Show the dashboard
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('dashboardPage').classList.remove('hidden');
+                document.getElementById('mainNav').classList.remove('hidden');
+                document.getElementById('userName').textContent = user.name;
+            } else {
+                alert('Invalid email or password');
+            }
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+
+            // Retrieve existing users from local storage
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+
+            // Check if the user already exists
+            const userExists = users.some(user => user.email === email);
+            if (userExists) {
+                alert('User already exists');
+                return;
+            }
+
+            // Add the new user to the users array
+            users.push({ name, email, password });
+
+            // Store the updated users array in local storage
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // Show the login page
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            alert('Sign up successful! Please log in.');
+        });
+
+        document.getElementById('logoutLink').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            // Clear the current user's information
+            localStorage.removeItem('currentUser');
+
+            // Show the home page
+            document.getElementById('dashboardPage').classList.add('hidden');
+            document.getElementById('walletPage').classList.add('hidden');
+            document.getElementById('activityPage').classList.add('hidden');
+            document.getElementById('sendRequestPage').classList.add('hidden');
+            document.getElementById('homePage').classList.remove('hidden');
+            document.getElementById('mainNav').classList.add('hidden');
+            document.getElementById('guestNav').classList.remove('hidden');
+        });
+
+        // Check if a user is already logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                document.getElementById('homePage').classList.add('hidden');
+                document.getElementById('dashboardPage').classList.remove('hidden');
+                document.getElementById('mainNav').classList.remove('hidden');
+                document.getElementById('userName').textContent = currentUser.name;
+            }
+        });
+    </script>
+</body>
+</html>
